@@ -11,18 +11,18 @@
 --- replays WAL records into a fresh memtable and flushes it to L0.
 --- Tombstones are only dropped when no deeper level can hold the key.
 
-local batchmod = require("leveldb_batch")
-local codec = require("leveldb_codec")
-local errors = require("leveldb_errors")
-local fs = require("leveldb_fs")
-local log = require("leveldb_log")
-local memtable = require("leveldb_memtable")
-local merging = require("leveldb_merging")
-local options = require("leveldb_options")
-local tablemod = require("leveldb_table")
-local util = require("leveldb_util")
-local version_edit = require("leveldb_version_edit")
-local version_set = require("leveldb_version_set")
+import batchmod from "./leveldb_batch"
+import codec from "./leveldb_codec"
+import errors from "./leveldb_errors"
+import fs from "./leveldb_fs"
+import log from "./leveldb_log"
+import memtable from "./leveldb_memtable"
+import merging from "./leveldb_merging"
+import options from "./leveldb_options"
+import tablemod from "./leveldb_table"
+import util from "./leveldb_util"
+import version_edit from "./leveldb_version_edit"
+import version_set from "./leveldb_version_set"
 
 type Error = {
   code: string,

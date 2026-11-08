@@ -1,10 +1,10 @@
 --- MemTable, WriteBatch and WAL tests.
 
 import T from "tlua_test"
-local codec = require("leveldb_codec")
-local memtable = require("leveldb_memtable")
-local batchmod = require("leveldb_batch")
-local log = require("leveldb_log")
+import codec from "../leveldb_codec"
+import memtable from "../leveldb_memtable"
+import batchmod from "../leveldb_batch"
+import log from "../leveldb_log"
 
 type Lookup = { value: string, state: number }
 type Parsed = { userKey: string, sequence: number, valueType: number }

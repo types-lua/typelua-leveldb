@@ -10,13 +10,13 @@
 --- Every block is followed by a 5-byte trailer: compression type (0 = none)
 --- and a masked CRC32C over the block bytes plus the type byte.
 
-local blockmod = require("leveldb_block")
-local bloommod = require("leveldb_bloom")
-local codec = require("leveldb_codec")
-local crc32c = require("leveldb_crc32c")
-local errors = require("leveldb_errors")
-local filtermod = require("leveldb_filter")
-local util = require("leveldb_util")
+import blockmod from "./leveldb_block"
+import bloommod from "./leveldb_bloom"
+import codec from "./leveldb_codec"
+import crc32c from "./leveldb_crc32c"
+import errors from "./leveldb_errors"
+import filtermod from "./leveldb_filter"
+import util from "./leveldb_util"
 
 type Error = {
   code: string,

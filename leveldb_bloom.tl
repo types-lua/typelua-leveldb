@@ -8,7 +8,7 @@
 --- XOR comes from `leveldb.util` (nibble table, no bitwise operators), so
 --- the module also runs on 5.1-compatible targets.
 
-local util = require("leveldb_util")
+import util from "./leveldb_util"
 
 local function rotl32(x: number, bits: number): number
   local v: number = util.mod32(x)

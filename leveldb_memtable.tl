@@ -8,8 +8,8 @@
 --- Values live as Lua strings; `bytesUsed` approximates memory so the DB can
 --- rotate tables at `writeBufferSize`, like the reference implementation.
 
-local codec = require("leveldb_codec")
-local util = require("leveldb_util")
+import codec from "./leveldb_codec"
+import util from "./leveldb_util"
 
 type Node = {
   key: string,

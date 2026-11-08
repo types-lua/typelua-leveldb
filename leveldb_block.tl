@@ -9,8 +9,8 @@
 --- Keys inside one restart interval share a prefix with the previous key.
 --- Restart points reset the prefix so binary search can start mid-block.
 
-local codec = require("leveldb_codec")
-local util = require("leveldb_util")
+import codec from "./leveldb_codec"
+import util from "./leveldb_util"
 
 local DEFAULT_RESTART_INTERVAL: number = 16
 

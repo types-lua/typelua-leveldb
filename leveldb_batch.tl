@@ -6,9 +6,9 @@
 --- so a batch can be replayed from a WAL or handed to another
 --- implementation unchanged.
 
-local codec = require("leveldb_codec")
-local errors = require("leveldb_errors")
-local util = require("leveldb_util")
+import codec from "./leveldb_codec"
+import errors from "./leveldb_errors"
+import util from "./leveldb_util"
 
 type Error = {
   code: string,

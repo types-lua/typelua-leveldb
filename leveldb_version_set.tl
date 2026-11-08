@@ -5,8 +5,8 @@
 --- smallest key. Compaction shrinks level N into N+1, keeping the invariant
 --- that every level below 0 is sorted and non-overlapping.
 
-local codec = require("leveldb_codec")
-local util = require("leveldb_util")
+import codec from "./leveldb_codec"
+import util from "./leveldb_util"
 
 type FileMeta = {
   number: number,

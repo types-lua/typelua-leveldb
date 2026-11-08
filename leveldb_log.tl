@@ -12,9 +12,9 @@
 --- reader tolerates a torn tail (crash before fsync) but reports checksum
 --- failures as corruption, exactly like the reference implementation.
 
-local crc32c = require("leveldb_crc32c")
-local errors = require("leveldb_errors")
-local util = require("leveldb_util")
+import crc32c from "./leveldb_crc32c"
+import errors from "./leveldb_errors"
+import util from "./leveldb_util"
 
 type Error = {
   code: string,

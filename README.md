@@ -69,9 +69,18 @@ A git dependency works the same way (the import path is the dependency key):
 "github.com/types-lua/typelua-leveldb" = { version = "^v0.1.0" }
 ```
 
-Internal modules are prefixed (`leveldb_codec`, `leveldb_table`, …) and locate
-their siblings at runtime, so the package works from any vendor path and never
-shadows generic names like `table` or `util`.
+Internal modules are prefixed (`leveldb_codec`, `leveldb_table`, …) and import
+each other with **package-local relative imports**:
+
+```lua
+-- init.tl
+import batchmod from "./leveldb_batch"
+```
+
+TypeLua emits that as a stable module name (`leveldb_batch` in this repo,
+`example.com.leveldb.leveldb_batch` when vendored), so the package works from
+any vendor path without patching `package.path`, and never shadows generic
+names like `table` or `util`.
 
 ## API
 

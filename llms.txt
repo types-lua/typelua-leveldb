@@ -58,8 +58,9 @@ tlua test --lua luajit --target 5.1
 import leveldb from "example.com.leveldb"
 ```
 
-Internal modules are `leveldb_*` prefixed and self-locating at runtime, so any
-vendor path works.
+Internal modules are `leveldb_*` prefixed and use TypeLua relative imports
+(`import x from "./leveldb_x"`), emitted as stable module names relative to the
+project or vendor root; any vendor path works without `package.path` patching.
 
 ## Facts an agent should not guess
 
