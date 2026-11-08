@@ -27,15 +27,15 @@ db:close()
 - **Typed surface.** Everything is checked under `strictNilChecks`/`noImplicitAny`;
   fallible calls return `{ err }` records instead of nil-in-the-middle tuples.
 - **Modular internals.** 18 focused modules, each with a single responsibility and a
-  byte-level test suite (1160 assertions).
+  byte-level test suite (23 cases, 1160 checks) using the built-in `tlua test` runner.
 
 ## Quick start
 
 ```bash
 # requires a tlua compiler build (see the TypeLua repo)
 tlua check
+tlua test                 # 23 cases, 1160 checks (built-in runner)
 tlua run main.tl          # demo, no build artifacts
-tlua run run_tests.tl     # full suite
 ```
 
 Or compile and run on stock Lua:
@@ -149,15 +149,20 @@ Not implemented, by design or scope:
 
 ## Testing
 
-`run_tests.tl` covers encoding vectors, CRC/bloom reference values, memtable snapshots,
-WAL fragmentation/corruption, block restart search, SSTable round-trips, corruption
-detection, crash recovery, batches, snapshots, compaction, destroy and repair.
+Tests use the compiler's zero-config runner: files under `tests/` return a table of
+named cases and assert through `tlua_test` (`eq`, `eqBytes`, `ok`, `raises`, `fail`).
 
 ```bash
-tlua run run_tests.tl                 # 1160 assertions
-tlua build && lua5.4 dist/run_tests.lua
-tlua build --target 5.1 && luajit dist/run_tests.lua
+tlua test                              # embedded golua, type-checks first
+tlua test --filter compaction          # only matching module/case names
+tlua test --format=json                # one JSON object per line
+tlua test --lua lua5.4                 # stock Lua 5.4
+tlua test --lua luajit --target 5.1    # LuaJIT
 ```
+
+Coverage: encoding vectors, CRC/bloom reference values, memtable snapshots, WAL
+fragmentation/corruption, block restart search, SSTable round-trips, corruption
+detection, crash recovery, batches, snapshots, compaction, destroy and repair.
 
 ## 中文速览
 

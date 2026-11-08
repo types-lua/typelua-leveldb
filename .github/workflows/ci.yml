@@ -32,22 +32,16 @@ jobs:
         run: /tmp/tlua check
         working-directory: leveldb
       - name: Run test suite (embedded interpreter)
-        run: /tmp/tlua run run_tests.tl
-        working-directory: leveldb
-      - name: Build Lua 5.4 target
-        run: /tmp/tlua build
+        run: /tmp/tlua test
         working-directory: leveldb
       - name: Install Lua runtimes
         run: sudo apt-get update && sudo apt-get install -y lua5.4 luajit
       - name: Run test suite (Lua 5.4)
-        run: lua5.4 dist/run_tests.lua
+        run: /tmp/tlua test --lua lua5.4
         working-directory: leveldb
-      - name: Build Lua 5.1 target
-        run: /tmp/tlua build --target 5.1
-        working-directory: leveldb
-      - name: Run test suite (LuaJIT)
-        run: luajit dist/run_tests.lua
+      - name: Run test suite (LuaJIT, 5.1 target)
+        run: /tmp/tlua test --lua luajit --target 5.1
         working-directory: leveldb
       - name: Run demo (Lua 5.4)
-        run: lua5.4 dist/main.lua
+        run: /tmp/tlua build && lua5.4 dist/main.lua
         working-directory: leveldb

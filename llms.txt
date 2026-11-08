@@ -6,7 +6,7 @@
 - [DESIGN](https://github.com/types-lua/typelua-leveldb/blob/main/docs/DESIGN.md): module map, formats, recovery state machine, compaction rules
 - [TypeLua docs](https://types-lua.github.io/docs/): language reference, FFI, concurrency, patterns
 - [TypeLua SPEC](https://github.com/types-lua/TypeLua/blob/main/SPEC.md): language contract
-- [Tests](https://github.com/types-lua/typelua-leveldb/blob/main/run_tests.tl): 1160 assertions across encoding, tables, engine and failure injection
+- [Tests](https://github.com/types-lua/typelua-leveldb/tree/main/tests): 23 named cases, 1160 checks, run by `tlua test`
 
 ## Use it
 
@@ -38,9 +38,9 @@ db:close()
 
 ```bash
 tlua check
-tlua run run_tests.tl                  # embedded interpreter
-tlua build && lua5.4 dist/run_tests.lua
-tlua build --target 5.1 && luajit dist/run_tests.lua
+tlua test                              # embedded interpreter
+tlua test --lua lua5.4
+tlua test --lua luajit --target 5.1
 ```
 
 ## Facts an agent should not guess

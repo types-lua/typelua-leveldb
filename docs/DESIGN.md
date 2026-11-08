@@ -112,6 +112,9 @@ manifest), replays surviving WALs into one fresh table, then rewrites
   tables, missing manifests.
 - **Engine behaviour:** 300-key compaction, mass deletion, snapshot reads,
   crash recovery (close without flush), destroy/repair.
+- **Runner:** `tlua test` discovers `tests/**`, type-checks the project, injects
+  `tlua_test` (`eq/eqBytes/ok/raises`), runs each named case in `pcall` and exits
+  non-zero on the first failing suite.
 - **Interop (manual):** `libleveldb` reads our WAL/tables/manifest; we read a
   database produced by `libleveldb` with compaction and tombstones.
 
