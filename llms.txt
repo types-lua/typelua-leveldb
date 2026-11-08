@@ -1,0 +1,55 @@
+# typelua-leveldb
+
+> A from-scratch LevelDB implementation in pure TypeLua (no C bindings). Byte-compatible on-disk format: WAL, MANIFEST, SSTables with bloom filters and CRC32C.
+
+- [README](https://github.com/types-lua/typelua-leveldb#readme): API, options, quick start, limitations
+- [DESIGN](https://github.com/types-lua/typelua-leveldb/blob/main/docs/DESIGN.md): module map, formats, recovery state machine, compaction rules
+- [TypeLua docs](https://types-lua.github.io/docs/): language reference, FFI, concurrency, patterns
+- [TypeLua SPEC](https://github.com/types-lua/TypeLua/blob/main/SPEC.md): language contract
+- [Tests](https://github.com/types-lua/typelua-leveldb/blob/main/run_tests.tl): 1160 assertions across encoding, tables, engine and failure injection
+
+## Use it
+
+```lua
+import leveldb from "leveldb"
+
+local opened = leveldb.open("./data")
+if opened.err ~= nil then error(opened.err.message) end
+local db = opened.db
+
+db:put("key", "value")
+print(db:get("key").value)
+
+local batch = leveldb.WriteBatch.new()
+batch:put("a", "1")
+batch:delete("key")
+db:write(batch)
+
+local it = db:newIterator()
+it:seekToFirst()
+while it:valid() do
+  print(it:key(), it:value())
+  it:next()
+end
+db:close()
+```
+
+## Run the suite
+
+```bash
+tlua check
+tlua run run_tests.tl                  # embedded interpreter
+tlua build && lua5.4 dist/run_tests.lua
+tlua build --target 5.1 && luajit dist/run_tests.lua
+```
+
+## Facts an agent should not guess
+
+- Fallible calls return **records**: `{ db, err }`, `{ found, value }`, `Error | nil`.
+  There is no `(value, err)` tuple across module boundaries.
+- Class methods are called with `:`; iterators expose `seek/seekToFirst/next/valid/key/value`.
+- `db:close()` does **not** flush the memtable: the WAL is the durable copy and the next
+  `open` replays it (this is the crash-recovery path, tested).
+- Compaction is synchronous (`db:compactAll()` or automatic L0 pressure).
+- Compression is not implemented; blocks are always type 0 (none).
+- One writer per directory: there is no `LOCK` file.

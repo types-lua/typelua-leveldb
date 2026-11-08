@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout typelua-leveldb
+        uses: actions/checkout@v4
+        with:
+          path: leveldb
+      - name: Checkout TypeLua compiler
+        uses: actions/checkout@v4
+        with:
+          repository: types-lua/TypeLua
+          path: typelua
+          fetch-depth: 1
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: typelua/go.mod
+          cache-dependency-path: typelua/go.sum
+      - name: Build tlua
+        run: go build -o /tmp/tlua ./cmd/tlua
+        working-directory: typelua
+      - name: Type-check
+        run: /tmp/tlua check
+        working-directory: leveldb
+      - name: Run test suite (embedded interpreter)
+        run: /tmp/tlua run run_tests.tl
+        working-directory: leveldb
+      - name: Build Lua 5.4 target
+        run: /tmp/tlua build
+        working-directory: leveldb
+      - name: Install Lua runtimes
+        run: sudo apt-get update && sudo apt-get install -y lua5.4 luajit
+      - name: Run test suite (Lua 5.4)
+        run: lua5.4 dist/run_tests.lua
+        working-directory: leveldb
+      - name: Build Lua 5.1 target
+        run: /tmp/tlua build --target 5.1
+        working-directory: leveldb
+      - name: Run test suite (LuaJIT)
+        run: luajit dist/run_tests.lua
+        working-directory: leveldb
+      - name: Run demo (Lua 5.4)
+        run: lua5.4 dist/main.lua
+        working-directory: leveldb

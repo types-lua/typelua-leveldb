@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "5.4",
+    "strict": true,
+    "strictNilChecks": true,
+    "noImplicitAny": true,
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["**/*.tl"],
+  "exclude": ["dist", "testdata"]
+}
