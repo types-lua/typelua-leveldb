@@ -4,7 +4,7 @@
 --- children are internal iterators (valid/seek/next/key/value); ordering is
 --- `codec.compareInternal`, so equal user keys come newest-sequence-first.
 
-local codec = require("leveldb.codec")
+local codec = require("leveldb_codec")
 
 local function newMergingIterator(children: any[]): any
   local it: any = {}

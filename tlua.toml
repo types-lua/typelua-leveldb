@@ -1,0 +1,3 @@
+[package]
+name = "typelua-leveldb"
+version = "v0.1.0"

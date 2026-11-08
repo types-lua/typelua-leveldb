@@ -4,8 +4,8 @@
 --- LevelDB util::Hash), so a regression in either direction is caught.
 
 import T from "tlua_test"
-import bloom from "leveldb.bloom"
-import crc from "leveldb.crc32c"
+import bloom from "leveldb_bloom"
+import crc from "leveldb_crc32c"
 
 return {
   ["crc32c reference vectors"] = function(): void

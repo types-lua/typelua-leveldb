@@ -4,10 +4,10 @@
 --- prefixes/restarts, filter block, metaindex, index and footer.
 
 import T from "tlua_test"
-local blockmod = require("leveldb.block")
-local codec = require("leveldb.codec")
-local filtermod = require("leveldb.filter")
-local tablemod = require("leveldb.table")
+local blockmod = require("leveldb_block")
+local codec = require("leveldb_codec")
+local filtermod = require("leveldb_filter")
+local tablemod = require("leveldb_table")
 
 type GetResult = { found: boolean, value: string }
 type Lookup = { state: number, value: string }

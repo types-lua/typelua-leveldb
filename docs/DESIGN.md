@@ -6,14 +6,15 @@ tests; file/record layouts follow the reference implementation byte for byte.
 ## 1. Module map
 
 ```
-facade        init.tl
-engine        db.tl
-manifest      version_edit.tl, version_set.tl
-tables        block.tl, filter.tl, table.tl
-memtable      memtable.tl
-durability    log.tl, batch.tl
-iteration     merging.tl
-primitives    util.tl, codec.tl, crc32c.tl, bloom.tl, fs.tl, options.tl, errors.tl
+facade        init.tl (package root) + leveldb.tl (in-repo alias)
+engine        leveldb_db.tl
+manifest      leveldb_version_edit.tl, leveldb_version_set.tl
+tables        leveldb_block.tl, leveldb_filter.tl, leveldb_table.tl
+memtable      leveldb_memtable.tl
+durability    leveldb_log.tl, leveldb_batch.tl
+iteration     leveldb_merging.tl
+primitives    leveldb_util.tl, leveldb_codec.tl, leveldb_crc32c.tl,
+              leveldb_bloom.tl, leveldb_fs.tl, leveldb_options.tl, leveldb_errors.tl
 ```
 
 Dependency direction is strictly downward: primitives never import the engine,
@@ -115,6 +116,9 @@ manifest), replays surviving WALs into one fresh table, then rewrites
 - **Runner:** `tlua test` discovers `tests/**`, type-checks the project, injects
   `tlua_test` (`eq/eqBytes/ok/raises`), runs each named case in `pcall` and exits
   non-zero on the first failing suite.
+- **Examples:** `tlua example` lists `examples/*.tl` and `examples/*/main.tl`
+  with their first `---` line, and runs one through a root-level wrapper so
+  subdirectory examples can import the package normally.
 - **Interop (manual):** `libleveldb` reads our WAL/tables/manifest; we read a
   database produced by `libleveldb` with compaction and tombstones.
 

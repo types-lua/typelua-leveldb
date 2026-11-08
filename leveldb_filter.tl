@@ -10,8 +10,8 @@
 --- (for block sizes larger than the slot) get empty filters so indices stay
 --- aligned, exactly like the reference implementation.
 
-local bloom = require("leveldb.bloom")
-local util = require("leveldb.util")
+local bloom = require("leveldb_bloom")
+local util = require("leveldb_util")
 
 local FILTER_BASE_LG: number = 11
 local FILTER_BASE: number = 2 ^ FILTER_BASE_LG

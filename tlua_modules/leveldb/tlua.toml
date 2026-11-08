@@ -1,4 +1,0 @@
-[package]
-name = "leveldb"
-version = "v0.1.0"
-description = "A from-scratch LevelDB in pure TypeLua"

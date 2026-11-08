@@ -5,7 +5,7 @@
 --- A 256-entry table plus 32-bit modulo arithmetic keeps it portable to
 --- LuaJIT in 5.1-compatible mode (no bitwise operators).
 
-local util = require("leveldb.util")
+local util = require("leveldb_util")
 
 local POLY: number = 0x82F63B78
 local TABLE: number[] = {}

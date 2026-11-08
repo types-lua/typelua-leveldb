@@ -2,8 +2,8 @@
 --- Reference values follow LevelDB's encoding byte for byte.
 
 import T from "tlua_test"
-import codec from "leveldb.codec"
-import util from "leveldb.util"
+import codec from "leveldb_codec"
+import util from "leveldb_util"
 
 type Parsed = { userKey: string, sequence: number, valueType: number }
 

@@ -6,7 +6,7 @@
 
 import T from "tlua_test"
 local leveldb = require("leveldb")
-local codec = require("leveldb.codec")
+local codec = require("leveldb_codec")
 
 type OpenResult = { db: any, err: any }
 type GetResult = { found: boolean, value: string }
@@ -203,9 +203,9 @@ local function testCorruption(): void
   db:close()
 
   -- Corrupt CURRENT so the manifest cannot be located.
-  local res = require("leveldb.fs").readFile(dir .. "/CURRENT")
+  local res = require("leveldb_fs").readFile(dir .. "/CURRENT")
   T.eq(res.err, nil, "read CURRENT")
-  require("leveldb.fs").writeFile(dir .. "/CURRENT", "MANIFEST-999999\n")
+  require("leveldb_fs").writeFile(dir .. "/CURRENT", "MANIFEST-999999\n")
   local opened: OpenResult = leveldb.open(dir, smallOptions())
   T.ok(opened.err ~= nil, "open reports missing manifest")
 
@@ -221,7 +221,7 @@ local function testDestroyRepair(): void
   db:close()
 
   T.eq(leveldb.destroy(dir), nil, "destroy returns nil")
-  T.eq(require("leveldb.fs").exists(dir .. "/CURRENT"), false, "CURRENT removed")
+  T.eq(require("leveldb_fs").exists(dir .. "/CURRENT"), false, "CURRENT removed")
 
   -- Rebuild from surviving tables: write a fresh DB, delete CURRENT only,
   -- then repair should reconstruct a manifest that still answers reads.

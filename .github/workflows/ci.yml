@@ -42,6 +42,9 @@ jobs:
       - name: Run test suite (LuaJIT, 5.1 target)
         run: /tmp/tlua test --lua luajit --target 5.1
         working-directory: leveldb
-      - name: Run demo (Lua 5.4)
-        run: /tmp/tlua build && lua5.4 dist/main.lua
+      - name: List examples
+        run: /tmp/tlua example
+        working-directory: leveldb
+      - name: Run the basic example
+        run: /tmp/tlua example basic
         working-directory: leveldb

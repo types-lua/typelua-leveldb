@@ -16,10 +16,19 @@
 --- compaction. Files are byte-compatible with the reference format, so
 --- `leveldbutil` can inspect them.
 
-local batchmod = require("leveldb.batch")
-local dbmod = require("leveldb.db")
-local errors = require("leveldb.errors")
-local options = require("leveldb.options")
+-- Locate sibling modules at runtime no matter where this package is
+-- vendored. PUC Lua reports sources with a leading "@", golua does not.
+local __src: any = debug.getinfo(1, "S").source
+if string.sub(__src, 1, 1) == "@" then __src = string.sub(__src, 2) end
+local __dir: any = string.match(__src, "^(.*[/\\])") or ""
+if __dir ~= "" and not string.find(package.path, __dir, 1, true) then
+  package.path = __dir .. "?.lua;" .. __dir .. "?/init.lua;" .. package.path
+end
+
+local batchmod = require("leveldb_batch")
+local dbmod = require("leveldb_db")
+local errors = require("leveldb_errors")
+local options = require("leveldb_options")
 
 --- Opens or creates a database.
 --- Returns { db: DB | nil, err: Error | nil }.

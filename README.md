@@ -5,7 +5,7 @@ Write-ahead log, skip-list memtable, bloom-filtered SSTables, manifest/version t
 synchronous compaction, on a byte-compatible on-disk format.
 
 ```lua
-import leveldb from "leveldb"
+import leveldb from "example.com.leveldb"   -- the dependency path you chose
 
 local opened = leveldb.open("data")
 if opened.err ~= nil then error(opened.err.message) end
@@ -35,16 +35,43 @@ db:close()
 # requires a tlua compiler build (see the TypeLua repo)
 tlua check
 tlua test                 # 23 cases, 1160 checks (built-in runner)
-tlua run main.tl          # demo, no build artifacts
+tlua example              # list the examples
+tlua example basic        # run examples/basic.tl (embedded interpreter)
+tlua example batch --lua lua5.4
 ```
 
-Or compile and run on stock Lua:
+## Use as a library
+
+The repository root is the package root (`init.tl`), so another TypeLua
+project can depend on it directly and import it by the dependency path:
+
+```toml
+# consumer/tlua.toml
+[package]
+name = "consumer"
+
+[dependencies]
+"example.com/leveldb" = { path = "../typelua-leveldb" }
+```
 
 ```bash
-tlua build
-lua5.4 dist/main.lua
-tlua build --target 5.1 && luajit dist/main.lua
+tlua mod get && tlua mod vendor
 ```
+
+```lua
+import leveldb from "example.com.leveldb"
+local db = leveldb.open("data").db
+```
+
+A git dependency works the same way (the import path is the dependency key):
+
+```toml
+"github.com/types-lua/typelua-leveldb" = { version = "^v0.1.0" }
+```
+
+Internal modules are prefixed (`leveldb_codec`, `leveldb_table`, …) and locate
+their siblings at runtime, so the package works from any vendor path and never
+shadows generic names like `table` or `util`.
 
 ## API
 
@@ -105,24 +132,24 @@ batch.tl                                              VersionSet (version_set.tl
 
 | Module | Responsibility | Highlight |
 |---|---|---|
-| `util.tl` | 32-bit arithmetic, fixed-width LE | exact `mul32` for LuaJIT doubles |
-| `codec.tl` | varints, length-prefixed slices, internal keys | LevelDB byte order |
-| `crc32c.tl` | CRC32C + masking | reference check vector |
-| `bloom.tl` | bloom policy | interoperable with `BloomFilterPolicy` |
-| `errors.tl` | error records | stable `code` strings |
-| `fs.tl` | file IO (`io.*`) | `(value, err)` records |
-| `memtable.tl` | skip-list memtable | deterministic xorshift heights |
-| `batch.tl` | `WriteBatch` | LevelDB batch wire format |
-| `log.tl` | WAL writer/reader | 32 KiB blocks, fragmentation, torn-tail |
-| `block.tl` | prefix-compressed blocks | restart-point binary search |
-| `filter.tl` | filter block | per-2 KiB slot mapping |
-| `table.tl` | SSTable builder/reader | footer, index, metaindex, CRCs |
-| `version_edit.tl` | manifest records | LevelDB tags |
-| `version_set.tl` | levels and compaction picking | L0 overlap closure |
-| `merging.tl` | k-way merge iterator | internal-key order |
-| `options.tl` | defaults + validation | one source of truth |
-| `db.tl` | engine | recovery, snapshots, compaction |
-| `init.tl` | facade | the only import you need |
+| `leveldb_util.tl` | 32-bit arithmetic, fixed-width LE | exact `mul32` for LuaJIT doubles |
+| `leveldb_codec.tl` | varints, length-prefixed slices, internal keys | LevelDB byte order |
+| `leveldb_crc32c.tl` | CRC32C + masking | reference check vector |
+| `leveldb_bloom.tl` | bloom policy | interoperable with `BloomFilterPolicy` |
+| `leveldb_errors.tl` | error records | stable `code` strings |
+| `leveldb_fs.tl` | file IO (`io.*`) | `(value, err)` records |
+| `leveldb_memtable.tl` | skip-list memtable | deterministic xorshift heights |
+| `leveldb_batch.tl` | `WriteBatch` | LevelDB batch wire format |
+| `leveldb_log.tl` | WAL writer/reader | 32 KiB blocks, fragmentation, torn-tail |
+| `leveldb_block.tl` | prefix-compressed blocks | restart-point binary search |
+| `leveldb_filter.tl` | filter block | per-2 KiB slot mapping |
+| `leveldb_table.tl` | SSTable builder/reader | footer, index, metaindex, CRCs |
+| `leveldb_version_edit.tl` | manifest records | LevelDB tags |
+| `leveldb_version_set.tl` | levels and compaction picking | L0 overlap closure |
+| `leveldb_merging.tl` | k-way merge iterator | internal-key order |
+| `leveldb_options.tl` | defaults + validation | one source of truth |
+| `leveldb_db.tl` | engine | recovery, snapshots, compaction |
+| `init.tl` | facade (plus `leveldb.tl` alias) | the only import you need |
 
 See [`docs/DESIGN.md`](docs/DESIGN.md) for formats, invariants and the recovery state machine.
 
@@ -185,9 +212,7 @@ MIT.
 
 ## Packaging
 
-The library lives at `tlua_modules/leveldb/` (its own `tlua.toml` is included), so it can be
-used directly in this project or copied/vendored into another project's `tlua_modules/leveldb`:
-
-```bash
-cp -r tlua_modules/leveldb /path/to/project/tlua_modules/leveldb
-```
+The repository root is the package (`tlua.toml` + `init.tl`), so it is consumed
+with a normal dependency entry and `tlua mod vendor`; see "Use as a library".
+`leveldb.tl` is a thin alias used by this repo's own tests and examples, where
+`import leveldb from "leveldb"` resolves through the project root.

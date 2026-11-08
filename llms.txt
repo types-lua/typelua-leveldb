@@ -7,11 +7,12 @@
 - [TypeLua docs](https://types-lua.github.io/docs/): language reference, FFI, concurrency, patterns
 - [TypeLua SPEC](https://github.com/types-lua/TypeLua/blob/main/SPEC.md): language contract
 - [Tests](https://github.com/types-lua/typelua-leveldb/tree/main/tests): 23 named cases, 1160 checks, run by `tlua test`
+- [Examples](https://github.com/types-lua/typelua-leveldb/tree/main/examples): listed and run with `tlua example`
 
 ## Use it
 
 ```lua
-import leveldb from "leveldb"
+import leveldb from "example.com.leveldb"   -- your dependency key
 
 local opened = leveldb.open("./data")
 if opened.err ~= nil then error(opened.err.message) end
@@ -39,9 +40,26 @@ db:close()
 ```bash
 tlua check
 tlua test                              # embedded interpreter
+tlua example                           # list examples
+tlua example basic                     # run one (cargo-style)
 tlua test --lua lua5.4
 tlua test --lua luajit --target 5.1
 ```
+
+## Use as a dependency
+
+`tlua.toml` at the repo root makes this a package:
+
+```toml
+"example.com/leveldb" = { path = "../typelua-leveldb" }
+```
+
+```lua
+import leveldb from "example.com.leveldb"
+```
+
+Internal modules are `leveldb_*` prefixed and self-locating at runtime, so any
+vendor path works.
 
 ## Facts an agent should not guess
 

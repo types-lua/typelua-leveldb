@@ -10,9 +10,9 @@
 ---   7 new file: level, number, size, smallest, largest
 ---   9 previous log number (legacy, ignored on read)
 
-local codec = require("leveldb.codec")
-local errors = require("leveldb.errors")
-local util = require("leveldb.util")
+local codec = require("leveldb_codec")
+local errors = require("leveldb_errors")
+local util = require("leveldb_util")
 
 type Error = {
   code: string,

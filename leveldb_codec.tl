@@ -6,7 +6,7 @@
 ---   internal key: user_key || fixed64((sequence << 8) | value_type)
 --- so sequence numbers sort descending inside one user key.
 
-local util = require("leveldb.util")
+local util = require("leveldb_util")
 
 local TYPE_DELETION: number = 0
 local TYPE_VALUE: number = 1
