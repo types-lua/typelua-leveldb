@@ -1,7 +1,7 @@
 # typelua-leveldb
 
 A from-scratch LevelDB implementation in [TypeLua](https://types-lua.github.io/docs/) — pure Lua, no C bindings.
-It uses [`typelua-stdlib`](https://github.com/types-lua/typelua-stdlib) for portable 32-bit operations.
+It uses [`typelua-stdlib`](https://github.com/types-lua/typelua-stdlib) for portable 32-bit operations and CRC32C.
 Write-ahead log, skip-list memtable, bloom-filtered SSTables, manifest/version tracking and
 synchronous compaction, on a byte-compatible on-disk format.
 
