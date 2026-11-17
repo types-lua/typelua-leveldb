@@ -2,3 +2,5 @@ dist/
 testdata/
 demo.db/
 *.db/
+
+tlua_modules

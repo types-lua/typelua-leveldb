@@ -28,6 +28,12 @@ jobs:
       - name: Build tlua
         run: go build -o /tmp/tlua ./cmd/tlua
         working-directory: typelua
+      - name: Resolve TypeLua dependencies
+        run: |
+          /tmp/tlua mod get
+          /tmp/tlua mod vendor
+        working-directory: leveldb
+
       - name: Type-check
         run: /tmp/tlua check
         working-directory: leveldb

@@ -7,6 +7,8 @@
 --- lose precision; the only 64-bit numbers on disk are sequence numbers,
 --- which real workloads keep far below that line.
 
+import bits from "github.com/types-lua/typelua-stdlib/bitops"
+
 local MAX_SEQUENCE: number = 9007199254740991 -- 2^53-1
 local TWO32: number = 4294967296
 local MASK32: number = 4294967295
@@ -20,8 +22,8 @@ local function mod32(x: number): number
   return x - math.floor(x / TWO32) * TWO32
 end
 
-local function shiftRight(x: number, bits: number): number
-  return idiv(x, 2 ^ bits)
+local function shiftRight(x: number, count: number): number
+  return bits.rshift(math.floor(x), math.floor(count))
 end
 
 --- Exact 32-bit multiply: LuaJIT doubles lose precision above 2^53, so the
@@ -36,47 +38,17 @@ local function mul32(a: number, b: number): number
   return mod32(lo + mod32(hi * 65536))
 end
 
-local function shiftLeft(x: number, bits: number): number
-  return mul32(x, 2 ^ bits)
-end
-
---- 32-bit XOR via eight nibble lookups. No bitwise operators, so this also
---- runs on 5.1-compatible targets. Used by CRC table generation and the
---- bloom hash.
-local XOR_NIBBLE: number[] = {}
-for a: number = 0, 15 do
-  for b: number = 0, 15 do
-    local x: number = 0
-    local place: number = 1
-    local av: number = a
-    local bv: number = b
-    for _: number = 1, 4 do
-      x = x + ((av % 2 + bv % 2) % 2) * place
-      av = math.floor(av / 2)
-      bv = math.floor(bv / 2)
-      place = place * 2
-    end
-    XOR_NIBBLE[a * 16 + b] = x
-  end
+local function shiftLeft(x: number, count: number): number
+  return bits.lshift(math.floor(x), math.floor(count))
 end
 
 local function xor32(a: number, b: number): number
-  local result: number = 0
-  local place: number = 1
-  local x: number = mod32(a)
-  local y: number = mod32(b)
-  for _: number = 1, 8 do
-    result = result + XOR_NIBBLE[(x % 16) * 16 + (y % 16)] * place
-    x = math.floor(x / 16)
-    y = math.floor(y / 16)
-    place = place * 16
-  end
-  return result
+  return bits.bxor(math.floor(a), math.floor(b))
 end
 
---- Bitwise complement in 32 bits (a XOR 0xFFFFFFFF).
+--- Bitwise complement in 32 bits.
 local function not32(x: number): number
-  return MASK32 - mod32(x)
+  return bits.bnot(math.floor(x))
 end
 
 --- Little-endian u16 (log record lengths).
